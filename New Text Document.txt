@@ -1,0 +1,54 @@
+//https://m7sm4-2iaaa-aaaab-qabra-cai.ic0.app/?tag=956360695
+
+import Debug "mo:base/Debug";
+import Option "mo:base/Option";
+
+// var total : Nat = 0;
+// public func addNum( num1 : Nat, num2 : Nat) : async Nat {
+//   total := 1;
+//   return total;
+// }
+
+actor Project{
+  //addTask
+  //completeTask
+  //viewTask
+  stable var state = 0;
+
+  type Task = {
+    title : Text;
+    description : Text;
+    isCompleted : Bool;
+  };
+
+//Optional types in motoko : a variable that takes/doesn't take input
+  
+  stable var currentTask : ?Task = null;
+
+  public func addTask(title : Text, description : Text) : async Text {
+    if (currentTask == null or Option.unwrap(currentTask).isCompleted){
+      // add task
+      currentTask := ?{title= title; description = description;
+       isCompleted = false};
+      currentTask.title := now;
+      return "Task Added Successfully"
+    }
+    else{
+      return "Complete Previous task first";
+    }
+  };
+
+  public func completeTask(): async Text{
+    let task = Option.unwrap(currentTask);
+    if (currentTask != null){
+      if(task.isCompleted){
+      return "Task Already Complete";}
+      else{
+        currentTask := ?{title = task.title; description = task.description; isCompleted = true}
+      }
+    }
+    else {
+    return "Task Completed Successfully";
+    }
+  }
+};
